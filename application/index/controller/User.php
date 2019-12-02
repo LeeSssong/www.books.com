@@ -87,9 +87,10 @@ class User extends Base
 
     public function addUser(Request $request)
     {
-
         $status = 0;
         $result = '验证失败';
+        $message = 'null';
+        $swapMessage = '';
         $data = $request -> param();
         //验证规则
         $rule = [
@@ -100,7 +101,23 @@ class User extends Base
         //验证数据 $this->validate($data, $rule, $msg)
         $result = $this -> validate($data, $rule);
 
-
-        return ['status'=>$status, 'message'=>$result];
+        if ($result === true) {
+            $swapMessage = '此时result为true';
+            $user = new UserModel($_POST);
+            $user->allowField(true)->save();
+            if ($user === null) {
+                $status = 0;
+                $message = '添加失败';
+                $swapMessage = $message;
+            } else {
+                $status = 1;
+                $message = '添加成功';
+                $swapMessage = $message;
+            }
+        } else {
+            $status = 0;
+            $swapMessage = $result;
+        }
+        return ['status'=>$status, 'message'=>$swapMessage];    //传回register.html的data属性及其值
     }
 }
