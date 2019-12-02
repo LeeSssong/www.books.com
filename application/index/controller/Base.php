@@ -25,7 +25,7 @@ class Base extends Controller
     //防止用户重复登陆,放在登陆操作前面:user/login
     protected function alreadyLogin(){
         if (USER_ID) {
-            $this -> error('用户已经登陆,请勿重复登陆',url('index/index'));
+            $this -> error('用户已经登陆,请勿重复登陆',url('user/index'));
         }
     }
 }
