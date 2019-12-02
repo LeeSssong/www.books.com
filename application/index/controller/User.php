@@ -37,7 +37,7 @@ class User extends Base
             //查询条件
             $map = [
                 'name' => $data['name'],
-                'password' => md5($data['password'])
+                'password' => $data['password']
             ];
 
             //数据表查询,返回模型对象
@@ -104,6 +104,7 @@ class User extends Base
         if ($result === true) {
             $swapMessage = '此时result为true';
             $user = new UserModel($_POST);
+
             $user->allowField(true)->save();
             if ($user === null) {
                 $status = 0;
@@ -111,7 +112,7 @@ class User extends Base
                 $swapMessage = $message;
             } else {
                 $status = 1;
-                $message = '添加成功';
+                $message = '添加成功，点击[确定]返回登陆界面';
                 $swapMessage = $message;
             }
         } else {
