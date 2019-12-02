@@ -7,6 +7,7 @@ namespace app\index\controller;
 use app\index\model\User as UserModel;
 use think\Request;
 use think\Session;
+use think\Db;
 
 class User extends Base
 {
@@ -23,7 +24,7 @@ class User extends Base
 
         //验证规则
         $rule = [
-            'name|姓名' => 'require',
+            'name|用户名' => 'require',
             'password|密码'=>'require',
         ];
 
@@ -57,5 +58,49 @@ class User extends Base
         }
 
         return ['status'=>$status, 'message'=>$result, 'data'=>$data];
+    }
+
+    public function register()
+    {
+        return $this->view->fetch();
+    }
+
+    public function checkUserName(Request $request)
+    {
+        $userName = trim($request->param('name'));
+        $status = 1;
+        $message = '用户名不可用';
+        if (!empty($userName)) {
+            if (UserModel::get(['name' => $userName])) {
+                //如果查询到该用户名
+                $status = 0;
+                $message = '用户名重复，请重新输入';
+            } else {
+                $message = '用户名可用';
+            }
+        } else {
+            $message = '用户名不可为空';
+        }
+
+        return ['status'=>$status, 'message'=>$message];
+    }
+
+    public function addUser(Request $request)
+    {
+
+        $status = 0;
+        $result = '验证失败';
+        $data = $request -> param();
+        //验证规则
+        $rule = [
+            'name|用户名' => 'require',
+            'password|密码'=>'require',
+        ];
+
+        //验证数据 $this->validate($data, $rule, $msg)
+        $result = $this -> validate($data, $rule);
+
+
+        return ['status'=>$status, 'message'=>$result];
     }
 }

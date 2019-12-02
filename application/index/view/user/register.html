@@ -23,12 +23,12 @@
     <div class="row main">
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">登陆</h1>
+                <h1 class="title">注册</h1>
                 <hr />
             </div>
         </div>
         <div class="main-login main-center">
-            <form class="form form-horizontal" method="post" action="index.html" id="form-login">
+            <form class="form form-horizontal" method="get" action="index.html" id="form-register">
 
                 <div class="form-group">
                     <label for="name" class="cols-sm-2 control-label">用户名</label>
@@ -51,11 +51,11 @@
                 </div>
 
                 <div class="form-group ">
-                    <button id="login" type="button" class="btn btn-primary btn-lg btn-block login-button">Login</button>
+                    <button id="submit" type="button" class="btn btn-primary btn-lg btn-block login-button">Register</button>
                 </div>
 
                 <div class="form-group">
-                    <p style="text-align: center">还没有账号 ?<a href="register.html">立即注册</a></p>
+                    <p style="text-align: center">已有账号 ?<a href="login.html">立即登陆</a></p>
                 </div>
             </form>
         </div>
@@ -68,22 +68,41 @@
 <script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.js"></script>
 
 <script>
+
     $(function(){
-        $('#login').on('click', function(){
+
+        //失去焦点时，检查用户名是否重复
+        $("#name").blur(function () {
             $.ajax({
-                type: 'POST',
-                url: "{:url('checkLogin')}",
-                data: $('#form-login').serialize(),
+                type:'GET',
+                url: "checkUserName",
+                data:{name:$(this).val()},
                 dataType: 'json',
-                success: function(data){
+                success: function (data) {
                     if (data.status == 1) {
+                       alert(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+
+        $("#submit").on("click",function (event) {
+            $.ajax({
+                type: "POST",
+                url: "{:url('addUser')}",
+                data: $("#form-register").serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if(data.status == 1) {
                         alert(data.message);
                         window.location.href="{:url('index/index')}";
                     } else {
                         alert(data.message);
                     }
                 }
-            });
+            })
         })
     })
 </script>
