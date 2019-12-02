@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="zh-CN" style="height: 100%;">
 
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__STATIC__/static/books/css/styles.css" rel="stylesheet" type="text/css" />
+
+    <!-- Website Font style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+</head>
+
+<body class="index-bg">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="JavaScript:void(0)">
+                <b>图书馆管理系统</b>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="?p=Home&c=Index&a=index">主页</a>
+                </li>
+                <li>
+                    <a href="?p=Home&c=Book&a=index">图书查询</a>
+                </li>
+                <li>
+                    <a href="?p=Home&c=User&a=index">个人中心</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span>个人中心</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>注销</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <div class="center-block" style="margin-top:50px;padding:20px;width:500px;background-color:rgba(255, 255, 255, 0.55);border-radius:30px;">
+        <h3 class="text-center">{$user_name}同学，你好！</h3>
+        <h3 class="text-center" style="margin-top:70px;">你已借{$borrow_book_num}本书</h3>
+        <h3 class="text-center">已超期{$out_date_book_num}本书</h3>
+<!--        <h4 class="text-center" style="margin-top:70px;">上次登录时间：</h4>-->
+<!--        <h4 class="text-center">{<$smarty.session.last_login_time>}</h4>-->
+    </div>
+</div>
 </body>
+
 </html>
