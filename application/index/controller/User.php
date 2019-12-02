@@ -121,4 +121,9 @@ class User extends Base
         }
         return ['status'=>$status, 'message'=>$swapMessage];    //传回register.html的data属性及其值
     }
+
+    public function index()
+    {
+        return $this->view->fetch();
+    }
 }
