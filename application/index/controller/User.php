@@ -11,11 +11,13 @@ use think\Db;
 
 class User extends Base
 {
+    //登陆
     public function login(){
         $this->alreadyLogin();
         return $this->view->fetch();
     }
 
+    //防止重复登陆
     public function checkLogin(Request $request)
     {
         $status = 0;
@@ -60,11 +62,13 @@ class User extends Base
         return ['status'=>$status, 'message'=>$result, 'data'=>$data];
     }
 
+    //注册
     public function register()
     {
         return $this->view->fetch();
     }
 
+    //验证注册的用户名是否已被占用
     public function checkUserName(Request $request)
     {
         $userName = trim($request->param('name'));
@@ -85,6 +89,7 @@ class User extends Base
         return ['status'=>$status, 'message'=>$message];
     }
 
+    //添加自己到数据库
     public function addUser(Request $request)
     {
         $status = 0;
@@ -122,6 +127,7 @@ class User extends Base
         return ['status'=>$status, 'message'=>$swapMessage];    //传回register.html的data属性及其值
     }
 
+    //用户主页
     public function index()
     {
         //$user = UserModel::get(['user_id'=>Session::get('user_id')]);
@@ -130,4 +136,14 @@ class User extends Base
         $this->view->assign('out_date_book_num',Session::get('user_info.out_date_book_num'));
         return $this->view->fetch();
     }
+
+    //图书查询页面
+    public function books()
+    {
+        return $this->view->fetch();
+    }
+
+
+
 }
+

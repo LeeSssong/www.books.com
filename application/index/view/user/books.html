@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图书馆管理系统</title>
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__STATIC__/static/books/css/styles.css" rel="stylesheet" type="text/css" />
+
+    <!-- Website Font style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+    <style type="text/css">
+        td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="JavaScript:void(0)">
+                <b>图书馆管理系统</b>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    <a href="books.html">图书查询</a>
+                </li>
+                <li>
+                    <a href="?p=Home&c=User&a=index">个人中心</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span>个人中心</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>注销</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <!--搜索框-->
+    <div style="width:370px;" class="center-block">
+        <div class="form-inline">
+            <div class="form-group">
+                <input type="text" id="input" class="form-control" placeholder="输入搜索内容" name="keyword" style="width:200px;"/>
+            </div>
+            <div class="form-group">
+                <select name="type" class="form-control">
+                    <option value="name">书名查询</option>
+                    <option value="num">书号查询</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" id="research" class="btn btn-primary">搜索</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap.js"></script>
+<script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.js"></script>
+
+<script>
+    $(function(){
+        //注册回车查找
+        $("#input").keydown(function(event){
+            if(event.keyCode == 13){
+                $("#research").click();
+            }
+        });
+        //查找
+        $("#research").click(function(){
+            if($("#input").val().length > 0){
+                if($("[name='type']").val() == "name"){
+                    var mode = "keyword";
+                }else if($("[name='type']").val() == "num"){
+                    var mode = "bookId";
+                }
+                location.href = "?p=Home&c=Book&a=index&"+ mode + "=" + $("#input").val();
+            }else{
+                alert("请输入搜索条件");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
