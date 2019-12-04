@@ -92,33 +92,35 @@
             <th class="text-center success" style="width: 90px;">状态</th>
         </tr>
         </thead>
-<!--        <tbody>-->
-<!--        {<if empty($books)>}-->
-<!--            <tr>-->
-<!--                <td colspan="4">无记录！</td>-->
-<!--            </tr>-->
-<!--            {</if>}-->
-<!--        {<foreach $books as $book>}-->
-<!--            <tr>-->
-<!--                <td>{<$book.id>}</td>-->
-<!--                <td>-->
-<!--                    <a href="?p=Home&c=Book&a=detail&id={<$book.id>}">{<$book.name>}</a>-->
-<!--                </td>-->
-<!--                <td>{<$book.author>}</td>-->
-<!--                {<if $book.user_id == "">}-->
-<!--                <td class="success">在馆</td>-->
-<!--                {<else>}-->
-<!--                <td class="danger">已借出</td>-->
-<!--                {</if>}-->
-<!--            </tr>-->
-<!--            {</foreach>}-->
-<!--        </tbody>-->
+
+        <!--查询到的具体信息-->
+        <tbody>
+        {volist name='booksList' id='vo'}
+        <tr>
+            <td class="info">{$vo.id}</td>
+            <!--TODO-->
+            <!--点击名字跳转到详情页-->
+            <td class="danger">{$vo.name}</td>
+            <td class="warning">{$vo.author}</td>
+            {if condition="$vo.user_id eq ''"}
+            <td class="success">在馆</td>
+            {else /}
+            <td class="danger">已借出</td>
+            {/if}
+        </tr>
+        {/volist}
+        </tbody>
     </table>
 
-    <!--查询到的具体信息-->
-    <table class="table table-bordered table-hover text-center" style="margin-top:30px;">
+    <!--显示分页按钮,事先要将bootstrap导入css和js-->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">{$booksList->render()}</div></div>
+        <div class="col-md-4"></div>
+    </div>
 
-    </table>
+
 
 </div>
 

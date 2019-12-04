@@ -5,9 +5,10 @@ namespace app\index\controller;
 
 
 use app\index\model\User as UserModel;
+use app\index\model\Info as InfoModel;
+use think\Db;
 use think\Request;
 use think\Session;
-use think\Db;
 
 class User extends Base
 {
@@ -141,11 +142,18 @@ class User extends Base
     //图书查询页面
     public function books()
     {
-        $this->isLogin();
-        return $this->view->fetch();
+        //通过分页显示数据
+       $bookslist = InfoModel::paginate(10);
+
+       //TODO:获取记录数量
+
+        $this->view->assign('booksList',$bookslist);
+//        $data = InfoModel::all();
+////        $Db = Db::table('info');
+////        $data=$Db::all();
+//        dump($data);
+//        die;
+        return $this->view->fetch('books');
     }
-
-
-
 }
 
