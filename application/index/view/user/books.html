@@ -82,6 +82,43 @@
         </div>
     </div>
 
+    <!--查询到的信息页表头-->
+    <table class="table table-bordered table-hover text-center" style="margin-top:30px;">
+        <thead>
+        <tr class="active">
+            <th class="text-center info">图书号</th>
+            <th class="text-center danger">图书名</th>
+            <th class="text-center warning">作者</th>
+            <th class="text-center success" style="width: 90px;">状态</th>
+        </tr>
+        </thead>
+<!--        <tbody>-->
+<!--        {<if empty($books)>}-->
+<!--            <tr>-->
+<!--                <td colspan="4">无记录！</td>-->
+<!--            </tr>-->
+<!--            {</if>}-->
+<!--        {<foreach $books as $book>}-->
+<!--            <tr>-->
+<!--                <td>{<$book.id>}</td>-->
+<!--                <td>-->
+<!--                    <a href="?p=Home&c=Book&a=detail&id={<$book.id>}">{<$book.name>}</a>-->
+<!--                </td>-->
+<!--                <td>{<$book.author>}</td>-->
+<!--                {<if $book.user_id == "">}-->
+<!--                <td class="success">在馆</td>-->
+<!--                {<else>}-->
+<!--                <td class="danger">已借出</td>-->
+<!--                {</if>}-->
+<!--            </tr>-->
+<!--            {</foreach>}-->
+<!--        </tbody>-->
+    </table>
+
+    <!--查询到的具体信息-->
+    <table class="table table-bordered table-hover text-center" style="margin-top:30px;">
+
+    </table>
 
 </div>
 

@@ -130,6 +130,7 @@ class User extends Base
     //用户主页
     public function index()
     {
+        $this->isLogin();
         //$user = UserModel::get(['user_id'=>Session::get('user_id')]);
         $this->view->assign('user_name',Session::get('user_info.name'));
         $this->view->assign('borrow_book_num',Session::get('user_info.borrow_book_num'));
@@ -140,6 +141,7 @@ class User extends Base
     //图书查询页面
     public function books()
     {
+        $this->isLogin();
         return $this->view->fetch();
     }
 
