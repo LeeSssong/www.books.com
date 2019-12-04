@@ -11,6 +11,8 @@
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/static/books/css/styles.css" rel="stylesheet" type="text/css" />
 
+    <link rel="stylesheet" type="text/css" href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+
     <!-- Website Font style -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
@@ -100,7 +102,9 @@
             <td class="info">{$vo.id}</td>
             <!--TODO-->
             <!--点击名字跳转到详情页-->
-            <td class="danger">{$vo.name}</td>
+            <td class="danger" >
+                <a href="javascript:;" onclick="books_show('书本详情','{:url("../books/details",["id"=>$vo["name"]])}','','510')">{$vo.name}</a>
+            </td>
             <td class="warning">{$vo.author}</td>
             {if condition="$vo.user_id eq ''"}
             <td class="success">在馆</td>
@@ -131,6 +135,7 @@
 <script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.js"></script>
 
 <script>
+    /*查找*/
     $(function(){
         //注册回车查找
         $("#input").keydown(function(event){
@@ -152,9 +157,12 @@
                 alert("请输入搜索条件");
             }
         });
-    })
+    });
 
-
+    /*点击书籍名字弹出详情框*/
+    function books_show(title,url,id,w,h) {
+        layer_show(title,url,w,h);
+    }
 </script>
 
 </body>
