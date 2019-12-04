@@ -143,16 +143,12 @@ class User extends Base
     public function books()
     {
         //通过分页显示数据
-       $bookslist = InfoModel::paginate(10);
+       $bookslist = InfoModel::paginate(12);
 
        //TODO:获取记录数量
 
         $this->view->assign('booksList',$bookslist);
-//        $data = InfoModel::all();
-////        $Db = Db::table('info');
-////        $data=$Db::all();
-//        dump($data);
-//        die;
+
         return $this->view->fetch('books');
     }
 }

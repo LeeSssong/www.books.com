@@ -94,7 +94,7 @@
         </thead>
 
         <!--查询到的具体信息-->
-        <tbody>
+        <tbody style="background-color: white">
         {volist name='booksList' id='vo'}
         <tr>
             <td class="info">{$vo.id}</td>
@@ -113,7 +113,8 @@
     </table>
 
     <!--显示分页按钮,事先要将bootstrap导入css和js-->
-    <div class="container">
+
+    <div class="container" id="pagination" style="margin-left: 200px">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">{$booksList->render()}</div></div>
@@ -123,16 +124,6 @@
 
 
 </div>
-
-
-
-
-
-
-
-
-
-
 
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
@@ -147,6 +138,7 @@
                 $("#research").click();
             }
         });
+
         //查找
         $("#research").click(function(){
             if($("#input").val().length > 0){
@@ -160,7 +152,9 @@
                 alert("请输入搜索条件");
             }
         });
-    });
+    })
+
+
 </script>
 
 </body>
