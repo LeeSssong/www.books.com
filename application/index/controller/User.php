@@ -139,17 +139,5 @@ class User extends Base
         return $this->view->fetch();
     }
 
-    //图书查询页面
-    public function books()
-    {
-        //通过分页显示数据
-       $bookslist = InfoModel::paginate(12);
-
-       //TODO:获取记录数量
-
-        $this->view->assign('booksList',$bookslist);
-
-        return $this->view->fetch('books');
-    }
 }
 
