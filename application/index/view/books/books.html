@@ -204,7 +204,6 @@
 
 <script>
 function query(name) {
-    alert(name);
     $.ajax({
         url:"details",
         async: true,
@@ -214,7 +213,7 @@ function query(name) {
         //成功后开启模态框
         success: function (data) {
 
-            $("#name").val(data.name);
+            $("#name").val(name);
             $("#author").val(data.author);
             $("#press").val(data.press);
             $("#press_time").val(data.press_time);
@@ -222,7 +221,6 @@ function query(name) {
             $("#ISBN").val(data.ISBN);
             $("#desc").val(data.desc);
 
-            // alert(data.author);
             $('#details').modal('show');
         },
         error:function () {
