@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN" style="height: 100%;">
-
+<html lang="zh-cmn">
 <head>
+    <meta charset="utf-8">
+    <title>Books</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -15,7 +16,8 @@
     <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 </head>
 
-<body class="index-bg">
+<body>
+<!--导航栏-->
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -33,13 +35,13 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="nav">
             <ul class="nav navbar-nav">
-                <li class="active">
+                <li>
                     <a href="index.html">主页</a>
                 </li>
                 <li>
                     <a href="../books/books.html">图书查询</a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="user_details.html">个人中心</a>
                 </li>
                 <li>
@@ -55,15 +57,61 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
-<div class="container" style="margin-top: 100px">
-    <div class="center-block" style="margin-top:50px;padding:20px;width:500px;background-color:rgba(255, 255, 255, 0.55);border-radius:30px;">
-        <h3 class="text-center">{$user_name}同学，你好！</h3>
-        <h3 class="text-center" style="margin-top:70px;">你已借{$borrow_book_num}本书</h3>
-        <h3 class="text-center">已超期{$out_date_book_num}本书</h3>
-<!--        <h4 class="text-center" style="margin-top:70px;">上次登录时间：</h4>-->
-<!--        <h4 class="text-center">{<$smarty.session.last_login_time>}</h4>-->
+
+<!--用户信息-->
+<div class="text-center container" style="width:65%;margin-top: 40px;padding-top: 10px;background-color: #f5f5f5;border-radius: 20px;">
+    <div class="h4">
+        <b>用户信息</b>
+    </div>
+
+    <p>用户账号：</p>
+    <p>用户班级：</p>
+    <p>创建时间：</p>
+    <p>用户上次登陆时间：</p>
+    <p>用户登陆次数：</p>
+    <p>用户状态：</p>
+
+    <div style="width: 450px;margin: 20px auto;overflow: hidden;display: flex; justify-content: space-between;">
+        <button class="btn btn-success" data-toggle="modal" data-target="#info">修改账户</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#lock"> 挂失/启用账户</button>
+        <button class="btn btn-warning" data-toggle="modal" data-target="#pwd">修改密码</button>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#del">删除账户</button>
     </div>
 </div>
-</body>
 
+<!--用户借书信息-->
+<div class="container text-center" style="width: 65%;margin-top: 30px;padding: 0;">
+    <div class="h4">
+        <b>用户借阅信息</b>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr class="active">
+            <th class="text-center">图书号</th>
+            <th class="text-center">图书名称</th>
+            <th class="text-center">借书时间</th>
+            <th class="text-center">应还时间</th>
+            <th class="text-center" style="width: 100px">操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr class="danger">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>
+            <button class="btn btn-info btn-xs prolong">续借</button>
+            <button class="btn btn-success btn-xs return">归还</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+</body>
 </html>

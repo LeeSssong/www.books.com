@@ -42,4 +42,9 @@ class Books extends Base
             'press'=>$press,'press_time'=>$press_time,'price'=>$price,
             'ISBN'=>$ISBN,'desc'=>$desc];
     }
+
+    public function borrow()
+    {
+        return $this->view->fetch();
+    }
 }

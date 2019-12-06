@@ -139,5 +139,11 @@ class User extends Base
         return $this->view->fetch();
     }
 
+    //用户详情页
+    public function user_details()
+    {
+        return $this->view->fetch();
+    }
+
 }
 
