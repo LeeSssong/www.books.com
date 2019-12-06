@@ -10,13 +10,14 @@ use think\Request;
 class Books extends Base
 {
     //图书查询页面
-    public function books()
+    public function books(Request $request)
     {
         //通过分页显示数据
         $bookslist = InfoModel::paginate(12);
-
+        $count = InfoModel::count();
         //TODO:获取记录数量
 
+        $this->view->assign('count',$count);
         $this->view->assign('booksList',$bookslist);
 
         return $this->view->fetch('books');
@@ -45,6 +46,25 @@ class Books extends Base
 
     public function borrow()
     {
+        return $this->view->fetch();
+    }
+
+    public  function search(Request $request)
+    {
+        $books = InfoModel::all();
+        $data = $request->port();
+        $book ='';
+
+        if (!empty($data['keyword'])) {
+            if ($data['type'] == 'name') {
+                $book = InfoModel::get(['name'=>$data['type']]);
+            } else if ($data['type'] == 'num') {
+                $book = InfoModel::get(['id'=>$data['type']]);
+            }
+        } else {
+            $book = InfoModel::get(['id'=>60]);
+        }
+        $this->view->assign('booksList',$book);
         return $this->view->fetch();
     }
 }

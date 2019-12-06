@@ -105,7 +105,7 @@
         <tr>
             <td class="info">{$vo.id}</td>
             <td>
-            <a class="danger queryA" href="javascript:void(0)" onclick="query('{$vo.name}')">{$vo.name}</a>
+                <a class="danger queryA" href="javascript:void(0)" onclick="query('{$vo.name}')">{$vo.name}</a>
             </td>
             <td class="warning">{$vo.author}</td>
             {if condition="$vo.user_id eq ''"}
@@ -120,12 +120,12 @@
 
     <!--显示分页按钮,事先要将bootstrap导入css和js-->
 
-    <div class="container" id="pagination" style="margin-left: 200px">
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">{$booksList->render()}</div></div>
-        <div class="col-md-4"></div>
-    </div>
+<!--    <div class="container" id="pagination" style="margin-left: 200px">-->
+<!--        <div class="row">-->
+<!--            <div class="col-md-4"></div>-->
+<!--            <div class="col-md-4">{$booksList->render()}</div></div>-->
+<!--        <div class="col-md-4"></div>-->
+<!--    </div>-->
 
 
 
@@ -209,32 +209,32 @@
 
 
 <script>
-function query(name) {
-    $.ajax({
-        url:"details",
-        async: true,
-        type: "get",
-        data: {"name":name},
-        dataType: "json",
-        //成功后开启模态框
-        success: function (data) {
+    function query(name) {
+        $.ajax({
+            url:"details",
+            async: true,
+            type: "get",
+            data: {"name":name},
+            dataType: "json",
+            //成功后开启模态框
+            success: function (data) {
 
-            $("#name").val(name);
-            $("#author").val(data.author);
-            $("#press").val(data.press);
-            $("#press_time").val(data.press_time);
-            $("#price").val(data.price);
-            $("#ISBN").val(data.ISBN);
-            $("#desc").val(data.desc);
+                $("#name").val(name);
+                $("#author").val(data.author);
+                $("#press").val(data.press);
+                $("#press_time").val(data.press_time);
+                $("#price").val(data.price);
+                $("#ISBN").val(data.ISBN);
+                $("#desc").val(data.desc);
 
-            $('#details').modal('show');
-        },
-        error:function () {
-            alert("请求失败");
-        },
+                $('#details').modal('show');
+            },
+            error:function () {
+                alert("请求失败");
+            },
 
-    });
-}
+        });
+    }
 
 
 </script>
