@@ -51,20 +51,31 @@ class Books extends Base
 
     public  function search(Request $request)
     {
-        $books = InfoModel::all();
-        $data = $request->port();
-        $book ='';
+        $data = $request->post();
+        $book_name = '追风筝的人';
+        $book = InfoModel::get(['name' => $book_name]);
+//        $book = InfoModel::get(['id' => $id]);
 
-        if (!empty($data['keyword'])) {
+        if (!empty($data['type'])) {
             if ($data['type'] == 'name') {
-                $book = InfoModel::get(['name'=>$data['type']]);
+                $book = InfoModel::get(['name'=>$data['keyword']]);
             } else if ($data['type'] == 'num') {
-                $book = InfoModel::get(['id'=>$data['type']]);
+                $book = InfoModel::get(['id'=>$data['keyword']]);
             }
-        } else {
-            $book = InfoModel::get(['id'=>60]);
         }
-        $this->view->assign('booksList',$book);
+//        $this->view->assign('booksList',$book);
+        if (null === $book) {
+            $this->view->assign('id',1);
+            $this->view->assign('name',2);
+            $this->view->assign('author',3);
+            $this->view->assign('user_id',4);
+        } else {
+            $this->view->assign('id',$book->id);
+            $this->view->assign('name',$book->name);
+            $this->view->assign('author',$book->author);
+            $this->view->assign('user_id',$book->user_id);
+        }
+
         return $this->view->fetch();
     }
 }

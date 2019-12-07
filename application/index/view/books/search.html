@@ -101,33 +101,20 @@
 
         <!--查询到的具体信息-->
         <tbody style="background-color: white">
-        {volist name='booksList' id='vo'}
         <tr>
-            <td class="info">{$vo.id}</td>
+            <td class="info">{$id}</td>
             <td>
-                <a class="danger queryA" href="javascript:void(0)" onclick="query('{$vo.name}')">{$vo.name}</a>
+                <a class="danger queryA" href="javascript:void(0)" onclick="query('{$name}')">{$name}</a>
             </td>
-            <td class="warning">{$vo.author}</td>
-            {if condition="$vo.user_id eq ''"}
+            <td class="warning">{$author}</td>
+            {if condition="$user_id eq ''"}
             <td class="success">在馆</td>
             {else /}
             <td class="danger">已借出</td>
             {/if}
         </tr>
-        {/volist}
         </tbody>
     </table>
-
-    <!--显示分页按钮,事先要将bootstrap导入css和js-->
-
-<!--    <div class="container" id="pagination" style="margin-left: 200px">-->
-<!--        <div class="row">-->
-<!--            <div class="col-md-4"></div>-->
-<!--            <div class="col-md-4">{$booksList->render()}</div></div>-->
-<!--        <div class="col-md-4"></div>-->
-<!--    </div>-->
-
-
 
     <!--点击名字跳转到详情页-->
     <!-- 弹出模态窗口-->
