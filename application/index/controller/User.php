@@ -157,6 +157,14 @@ class User extends Base
     //用户详情页
     public function user_details()
     {
+        $this->view->assign('name',Session::get('user_info.name'));
+        $this->view->assign('id',Session::get('user_info.id'));
+        $this->view->assign('login_time',UserModel::getLoginTimeAttr(Session::get('user_info.login_time')));
+        $this->view->assign('status',Session::get('user_info.status'));
+        if (Session::get('user_info.status') == 1) {
+            $this->view->assign('status','普通用户');
+        }
+        $this->view->assign('login_count',Session::get('user_info.login_count'));
         return $this->view->fetch();
     }
 

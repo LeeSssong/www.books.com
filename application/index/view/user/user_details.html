@@ -64,12 +64,11 @@
         <b>用户信息</b>
     </div>
 
-    <p>用户账号：</p>
-    <p>用户班级：</p>
-    <p>创建时间：</p>
-    <p>用户上次登陆时间：</p>
-    <p>用户登陆次数：</p>
-    <p>用户状态：</p>
+    <p>用户名：{$name}</p>
+    <p>借书号：{$id}</p>
+    <p>上次登陆时间：{$login_time}</p>
+    <p>登陆次数：{$login_count}</p>
+    <p>用户权限：{$status}</p>
 
     <div style="width: 450px;margin: 20px auto;overflow: hidden;display: flex; justify-content: space-between;">
         <button class="btn btn-success" data-toggle="modal" data-target="#info">修改账户</button>
