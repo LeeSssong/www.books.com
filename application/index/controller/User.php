@@ -132,9 +132,16 @@ class User extends Base
     public function index()
     {
         $this->isLogin();
-        //$user = UserModel::get(['user_id'=>Session::get('user_id')]);
+        $id = Session::get('user_id');
+        $user_id = InfoModel::select(['user_id' => $id]);
+        $borrow_num ='0';
+        if( null === $user_id) {
+            $borrow_num = 0;
+        } else {
+            $borrow_num = count($user_id);
+        }
         $this->view->assign('user_name',Session::get('user_info.name'));
-        $this->view->assign('borrow_book_num',Session::get('user_info.borrow_book_num'));
+        $this->view->assign('borrow_book_num',$borrow_num);
         $this->view->assign('out_date_book_num',Session::get('user_info.out_date_book_num'));
         return $this->view->fetch();
     }
