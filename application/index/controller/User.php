@@ -4,9 +4,10 @@
 namespace app\index\controller;
 
 
+use app\index\model\Info;
 use app\index\model\User as UserModel;
 use app\index\model\Info as InfoModel;
-use think\Db;
+use app\index\model\Borrow_list as BorrowModel;
 use think\Request;
 use think\Session;
 
@@ -133,15 +134,22 @@ class User extends Base
     {
         $this->isLogin();
         $id = Session::get('user_id');
-        $user_id = InfoModel::select(['user_id' => $id]);
+
+        $borrow = BorrowModel::select(['user_id' => $id]);
+        $books = new InfoModel();
+        $books_num = $books->count();
+
         $borrow_num ='0';
-        if( null === $user_id) {
+        if( null === $borrow) {
             $borrow_num = 0;
         } else {
-            $borrow_num = count($user_id);
+            $borrow_num = count($borrow);
         }
+
+        $this->view->assign('count',$books_num);
         $this->view->assign('user_name',Session::get('user_info.name'));
         $this->view->assign('borrow_book_num',$borrow_num);
+        $this->view->assign('login_time',UserModel::getLoginTimeAttr(Session::get('user_info.login_time')));
         $this->view->assign('out_date_book_num',Session::get('user_info.out_date_book_num'));
         return $this->view->fetch();
     }
@@ -150,6 +158,17 @@ class User extends Base
     public function user_details()
     {
         return $this->view->fetch();
+    }
+
+    //退出登陆
+    public function logout()
+    {
+        //退出前先更新登录时间字段,下次登录时就知道上次登录时间了
+        UserModel::update(['login_time'=>time()],['id'=> Session::get('user_id')]);
+        Session::delete('user_id');
+        Session::delete('user_info');
+
+        $this -> success('注销登陆,正在返回',url('user/login'));
     }
 
 }

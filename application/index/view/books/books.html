@@ -108,7 +108,7 @@
             <a class="danger queryA" href="javascript:void(0)" onclick="query('{$vo.name}')">{$vo.name}</a>
             </td>
             <td class="warning">{$vo.author}</td>
-            {if condition="$vo.user_id eq ''"}
+            {if condition="$vo.borrow eq ''"}
             <td class="success">在馆</td>
             {else /}
             <td class="danger">已借出</td>

@@ -63,7 +63,7 @@ class User extends Model
     }
 
     //登录时间获取器
-    public function getLoginTimeAttr($value)
+    public static function getLoginTimeAttr($value)
     {
         return date('Y/m/d H:i', $value);
     }

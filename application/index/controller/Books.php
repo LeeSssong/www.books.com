@@ -2,6 +2,7 @@
 
 
 namespace app\index\controller;
+use app\index\model\Borrow_list;
 use app\index\model\Info as InfoModel;
 use app\index\model\User as UserModel;
 use think\Request;
@@ -16,7 +17,6 @@ class Books extends Base
         $bookslist = InfoModel::paginate(12);
         $count = InfoModel::count();
         //TODO:获取记录数量
-
         $this->view->assign('count',$count);
         $this->view->assign('booksList',$bookslist);
 
