@@ -73,7 +73,7 @@ class Books extends Base
             $this->view->assign('id',$book->id);
             $this->view->assign('name',$book->name);
             $this->view->assign('author',$book->author);
-            $this->view->assign('user_id',$book->user_id);
+            $this->view->assign('borrow',$book->borrow);
         }
 
         return $this->view->fetch();

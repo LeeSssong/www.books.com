@@ -135,15 +135,14 @@ class User extends Base
         $this->isLogin();
         $id = Session::get('user_id');
 
-        $borrow = BorrowModel::select(['user_id' => $id]);
+        $borrow = BorrowModel::get(['user_id' => $id]);
         $books = new InfoModel();
         $books_num = $books->count();
 
-        $borrow_num ='0';
         if( null === $borrow) {
             $borrow_num = 0;
         } else {
-            $borrow_num = count($borrow);
+            $borrow_num = $borrow->count();
         }
 
         $this->view->assign('count',$books_num);
@@ -165,6 +164,24 @@ class User extends Base
             $this->view->assign('status','普通用户');
         }
         $this->view->assign('login_count',Session::get('user_info.login_count'));
+
+        //借阅详情
+        $borrowList = BorrowModel::get(['user_id' => Session::get('user_id')]);
+//        $bookList = InfoModel::get(['borrow' => Session::get('user_id')]);
+//
+//        for ($i=0;$i<$borrowList->count();$i++) {
+//            if ($borrowList->count() == 0 || $bookList->count() == 0){
+//                $borrowList[$i]->name = 'null';
+//            } else {
+//                $borrowList[$i]->name = $bookList[$i]->name;
+//            }
+//
+//        }
+        $borrowList = $borrowList->paginate(5);
+        $count = $borrowList ->count();
+        $this->view->assign('count',$count);
+        $this->view->assign('borrowList',$borrowList);
+
         return $this->view->fetch();
     }
 

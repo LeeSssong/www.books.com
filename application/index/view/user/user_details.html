@@ -96,16 +96,18 @@
         </thead>
 
         <tbody>
-        <tr class="danger">
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>4</td>
-            <td>
-            <button class="btn btn-info btn-xs prolong">续借</button>
-            <button class="btn btn-success btn-xs return">归还</button>
-            </td>
-        </tr>
+            {volist name='borrowList' id='b'}
+                <tr class="danger">
+                    <td>{$b.info_id}</td>
+                    <td>{$b.name}</td>
+                    <td>{$b.borrow_date}</td>
+                    <td>{$b.back_date}</td>
+                    <td>
+                    <button class="btn btn-info btn-xs prolong">续借</button>
+                    <button class="btn btn-success btn-xs return">归还</button>
+                    </td>
+                </tr>
+            {/volist}
         </tbody>
     </table>
 </div>
