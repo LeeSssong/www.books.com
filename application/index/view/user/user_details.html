@@ -68,12 +68,18 @@
     <p>借书号：{$id}</p>
     <p>上次登陆时间：{$login_time}</p>
     <p>登陆次数：{$login_count}</p>
-    <p>用户权限：{$status}</p>
-
+    <p>用户权限：{$role}</p>
+    {if condition="$status eq '1'"}
+    <p>用户状态：已启用</p>
+    {else /}
+    <p>用户状态：已挂失</p>
+    {/if}
     <div style="width: 450px;margin: 20px auto;overflow: hidden;display: flex; justify-content: space-between;">
-        <button class="btn btn-success" data-toggle="modal" data-target="#info">修改账户</button>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#lock"> 挂失/启用账户</button>
-        <button class="btn btn-warning" data-toggle="modal" data-target="#pwd">修改密码</button>
+
+        <button class="btn btn-success" data-toggle="modal" data-target="#info">修改账户信息</button>
+        {if condition="$status eq '1'"}
+        <button class="btn btn-primary" data-toggle="modal" data-target="#lost">挂失账户</button>
+        {/if}
         <button class="btn btn-danger" data-toggle="modal" data-target="#del">删除账户</button>
     </div>
 </div>
@@ -112,6 +118,181 @@
     </table>
 </div>
 
+
+<!--模态框-->
+<div class="container-fluid text-center">
+
+<!--修改账户-->
+<!--用户名/密码-->
+    <div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 150px">
+            <div class="modal-content">
+                <form method="post" id="infoForm">
+                    <!--头部-->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel1">
+                            修改账户信息
+                        </h4>
+                    </div>
+                    <!--主要内容-->
+                    <div class="modal-body  center-block" style="width: 45%">
+                        <!--用户名修改-->
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">用户名：</div>
+                                <input type="text" class="form-control" name="name" value="{$user.name}">
+                            </div>
+                        </div>
+
+                        <!--密码修改-->
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">新密码：</div>
+                                <input type="password" class="form-control" name="password" id="newPwd" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">确认密码：</div>
+                                <input type="password" class="form-control" name="password" id="confirmPwd" value="">
+                            </div>
+                        </div>
+                        <p id="msg_pwd" style=""></p>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" id="infoSubmit" class="btn btn-primary disabled">
+                            提交
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                    </div>
+                    <!--将当前记录的id做为隐藏域发送到服务器-->
+                    <input type="hidden" value="{$user.id}" name="id">
+                </form>
+            </div><!--modal-content-->
+        </div><!--modal-->
+    </div>
+
+
+
+
+
+
+<!--挂失账户-->
+    <div class="modal fade" id="lost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 150px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel2">
+                        挂失账户
+                    </h4>
+                </div>
+                    <div class="modal-body" style="color: red">
+                        是否要挂失账户名为{$user.name}的账户
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="lostSubmit" class="btn btn-danger" data-dismiss="modal">
+                            确定
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            </div><!--modal-content-->
+        </div><!--modal-->
+    </div>
+
+
+<!--删除账户-->
+
+</div><!--模态框-->
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+
+        //如果信息没有修改则确定按钮不能按下
+        $("form").children().change(function () {
+            $("#infoSubmit").removeClass('disabled')
+        });
+
+        //修改账户信息
+        //如果涉及到修改密码，则判断两次输入是否一致
+        $("#newPwd").on('input propertychange', function () {
+            const pwd = $.trim($(this).val());
+            const cpwd = $.trim($("#confirmPwd").val());
+            if (pwd != "" && cpwd != ""){
+                if (pwd == cpwd){
+                    $("#msg_pwd").html("<font color='green'>两次密码通过</font>");
+                } else {
+                    $("#msg_pwd").html("<font color='red'>两次密码不一致</font>");
+                }
+            }
+        });
+        $("#confirmPwd").on('input propertychange', function () {
+            const pwd = $.trim($(this).val());
+            const cpwd = $.trim($("#newPwd").val());
+            if (pwd != "" && cpwd != ""){
+                if (pwd == cpwd){
+                    $("#msg_pwd").html("<font color='green'>两次密码通过</font>");
+                } else {
+                    $("#msg_pwd").html("<font color='red'>两次密码不一致</font>");
+                }
+            }
+        });
+        //提交表单
+        $("#infoSubmit").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "{:url('userEdit')}",
+                data: $("#infoForm").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1){
+                        alert(data.message);
+                        window.location.href="{:url('logout')}";
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            })
+        });
+
+        //挂失账户
+        $("#lostSubmit").click(function () {
+            // alert('this');
+            $.ajax({
+                // async: true,
+                type: "post",
+                url: "lostUser",
+                data: {},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1) {
+                        alert(data.message);
+                        window.location.href="{url:('logout')}";
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert('请求失败');
+                }
+            });
+        })
+
+
+
+    })
+
+
+</script>
 
 
 </body>

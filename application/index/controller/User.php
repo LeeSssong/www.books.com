@@ -160,23 +160,18 @@ class User extends Base
         $this->view->assign('id',Session::get('user_info.id'));
         $this->view->assign('login_time',UserModel::getLoginTimeAttr(Session::get('user_info.login_time')));
         $this->view->assign('status',Session::get('user_info.status'));
-        if (Session::get('user_info.status') == 1) {
-            $this->view->assign('status','普通用户');
+        if (Session::get('user_info.role') == 0) {
+            $this->view->assign('role','普通用户');
         }
+        $user = UserModel::get(['id' => Session::get('user_id')]);
+        $this->view->assign('user',$user);
+
+
         $this->view->assign('login_count',Session::get('user_info.login_count'));
 
         //借阅详情
         $borrowList = BorrowModel::get(['user_id' => Session::get('user_id')]);
-//        $bookList = InfoModel::get(['borrow' => Session::get('user_id')]);
-//
-//        for ($i=0;$i<$borrowList->count();$i++) {
-//            if ($borrowList->count() == 0 || $bookList->count() == 0){
-//                $borrowList[$i]->name = 'null';
-//            } else {
-//                $borrowList[$i]->name = $bookList[$i]->name;
-//            }
-//
-//        }
+
         $borrowList = $borrowList->paginate(5);
         $count = $borrowList ->count();
         $this->view->assign('count',$count);
@@ -194,6 +189,45 @@ class User extends Base
         Session::delete('user_info');
 
         $this -> success('注销登陆,正在返回',url('user/login'));
+    }
+
+    //修改用户信息
+    public function userEdit(Request $request)
+    {
+        //获取数据
+        $param = $request -> param();
+
+        //去掉表单中为空的数据，name为字段名,value为字段值
+        foreach ($param as $key => $value) {
+            if (!empty($value)){
+                $data[$key] = $value;
+            }
+        }
+
+        $condition = ['id' => $data['id']];
+        $result = UserModel::update($data,$condition);
+
+        if ($result == true) {
+            return ['status'=>1, 'message'=>'更新成功，需重新登陆'];
+        } else {
+            return ['status'=>0, 'message'=>'更新失败'];
+        }
+
+    }
+
+    //挂失账户
+    public function lostUser(Request $request)
+    {
+
+        $data = ['status'=>0];
+        $condition = ['id' => Session::get('user_id')];
+        $result = UserModel::update($data,$condition);
+        if ($result == true) {
+            return ['status'=>1, 'message'=>'已挂失，需重新登陆'];
+        } else if ($result == false) {
+            return ['status'=>0, 'message'=>'挂失失败'];
+        }
+
     }
 
 }
