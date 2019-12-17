@@ -49,15 +49,21 @@ class User extends Base
             if (null === $user) {
                 $result = '没有该用户,请检查';
             } else {
-                $status = 1;
-                $result = '验证通过,点击[确定]后进入后台';
+                if ($user -> isDelete  == 0)
+                {
+                    $status = 0;
+                    $result = '该用户已删除，请联系管理员';
+                } else {
+                    $status = 1;
+                    $result = '验证通过,点击[确定]后进入后台';
 
-                //创建2个session,用来检测用户登陆状态和防止重复登陆
-                Session::set('user_id', $user -> id);
-                Session::set('user_info', $user -> getData());
+                    //创建2个session,用来检测用户登陆状态和防止重复登陆
+                    Session::set('user_id', $user -> id);
+                    Session::set('user_info', $user -> getData());
 
-                //更新用户登录次数:自增1
-                $user -> setInc('login_count');
+                    //更新用户登录次数:自增1
+                    $user -> setInc('login_count');
+                }
             }
         }
 
@@ -162,6 +168,8 @@ class User extends Base
         $this->view->assign('status',Session::get('user_info.status'));
         if (Session::get('user_info.role') == 0) {
             $this->view->assign('role','普通用户');
+        } else if (Session::get('user_info.role') == 1) {
+            $this->view->assign('role','管理员');
         }
         $user = UserModel::get(['id' => Session::get('user_id')]);
         $this->view->assign('user',$user);
@@ -171,10 +179,13 @@ class User extends Base
 
         //借阅详情
         $borrowList = BorrowModel::get(['user_id' => Session::get('user_id')]);
+        if ($borrowList == true){
+            $borrowList = $borrowList->paginate(5);
+            $count = $borrowList ->count();
+            $this->view->assign('count',$count);
+        }
 
-        $borrowList = $borrowList->paginate(5);
-        $count = $borrowList ->count();
-        $this->view->assign('count',$count);
+
         $this->view->assign('borrowList',$borrowList);
 
         return $this->view->fetch();
@@ -218,8 +229,7 @@ class User extends Base
     //挂失账户
     public function lostUser(Request $request)
     {
-
-        $data = ['status'=>0];
+        $data = ['status'=>'0'];
         $condition = ['id' => Session::get('user_id')];
         $result = UserModel::update($data,$condition);
         if ($result == true) {
@@ -230,5 +240,20 @@ class User extends Base
 
     }
 
+    //删除账户
+    public function delUser(Request $request)
+    {
+//        $data = ['isDelete'=>'0'];
+//        $condition = ['id' => Session::get('user_id')];
+//        $result = UserModel::update($data,$condition);
+
+        $user = new UserModel();
+        $result = $user->where('id',Session::get('user_id'))->update(['isDelete' => '0']);
+        if ($result == true) {
+            return ['status' => 1, 'message' => "已删除，点击[确定]退出"];
+        } else if ($result == false) {
+            return ['status' => 0, 'message' => '删除失败'];
+        }
+    }
 }
 

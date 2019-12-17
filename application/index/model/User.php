@@ -15,11 +15,13 @@ class User extends Model
     protected $deleteTime = 'delete_time';
 
 
-    // 保存自动完成列表
+    /*// 保存自动完成列表
     protected $auto = [
         'delete_time' => NULL,
-        'is_delete' => 1, //1:允许删除 0:禁止删除
-    ];
+//        'is_delete' => 1, //1:允许删除 0:禁止删除
+        'isDelete' => 1, //1:允许删除 0:禁止删除
+
+    ];*/
     // 新增自动完成列表
     protected $insert = [
         'login_time'=> NULL, //新增时登录时间应该为NULL,因为刚创建

@@ -4,6 +4,7 @@
 namespace app\index\controller;
 use think\Controller;
 use think\Session;
+use app\index\model\User as UserModel;
 
 class Base extends Controller
 {

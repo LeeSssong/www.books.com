@@ -209,6 +209,31 @@
 
 
 <!--删除账户-->
+<div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 150px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel3">
+                    删除
+                </h4>
+            </div>
+            <div class="modal-body" style="color: red">
+                是否要删除账户名为{$user.name}的账户
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="delSubmit" class="btn btn-danger" data-dismiss="modal">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div><!--modal-content-->
+</div><!--modal-->
+</div>
+
+
 
 </div><!--模态框-->
 
@@ -223,7 +248,7 @@
         });
 
         //修改账户信息
-        //如果涉及到修改密码，则判断两次输入是否一致
+        //1.如果涉及到修改密码，则判断两次输入是否一致
         $("#newPwd").on('input propertychange', function () {
             const pwd = $.trim($(this).val());
             const cpwd = $.trim($("#confirmPwd").val());
@@ -246,7 +271,7 @@
                 }
             }
         });
-        //提交表单
+        //2.提交表单
         $("#infoSubmit").click(function () {
             $.ajax({
                 type: "POST",
@@ -276,7 +301,7 @@
                 success: function (data) {
                     if (data.status == 1) {
                         alert(data.message);
-                        window.location.href="{url:('logout')}";
+                        window.location.href="logout";
                     } else {
                         alert(data.message);
                     }
@@ -285,7 +310,29 @@
                     alert('请求失败');
                 }
             });
-        })
+        });
+
+        //删除账户
+        $("#delSubmit").click(function () {
+            $.ajax({
+                type: "post",
+                url: "delUser",
+                data: {},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1) {
+                        alert(data.message);
+                        window.location.href="logout";
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert('请求失败');
+                    alert(data.message);
+                }
+            });
+        });
 
 
 
