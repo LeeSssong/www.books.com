@@ -109,8 +109,7 @@
                     <td>{$b.borrow_date}</td>
                     <td>{$b.back_date}</td>
                     <td>
-                    <button class="btn btn-info btn-xs prolong">续借</button>
-                    <button class="btn btn-success btn-xs return">归还</button>
+                        <a type="button" class="btn btn-info btn-xs prolong" href="javascript:void(0)" onclick="r('{$b.name}')">归还</a>
                     </td>
                 </tr>
             {/volist}
@@ -177,11 +176,6 @@
         </div><!--modal-->
     </div>
 
-
-
-
-
-
 <!--挂失账户-->
     <div class="modal fade" id="lost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="margin-top: 150px">
@@ -231,9 +225,29 @@
         </div>
     </div><!--modal-content-->
 </div><!--modal-->
-</div>
 
-
+<!--归还图书-->
+<div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 150px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel4">
+                </h4>
+            </div>
+            <div class="modal-body" style="color: red">
+                是否要归还此书?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="returnSubmit" class="btn btn-danger" data-dismiss="modal">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div><!--modal-content-->
+</div><!--modal-->
 
 </div><!--模态框-->
 
@@ -333,11 +347,32 @@
                 }
             });
         });
-
-
-
-    })
-
+    });
+function r(name) {
+    if (confirm("确定归还本书吗")) {
+        alert('正在处理');
+        $.ajax({
+            url: "../Books/backBook",
+            async: true,
+            type: "post",
+            data: {"name":name},
+            dataType: "json",
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.message);
+                    window.location.href="user_details";
+                } else if (data.status == 0) {
+                    alert(data.message);
+                }
+            },
+            error: function() {
+                alert("请求失败");
+            }
+        })
+    } else {
+        alert('选择了否');
+    }
+}
 
 </script>
 

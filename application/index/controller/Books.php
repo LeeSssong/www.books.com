@@ -6,6 +6,7 @@ use app\index\model\Borrow_list;
 use app\index\model\Info as InfoModel;
 use app\index\model\User as UserModel;
 use think\Request;
+use think\Session;
 
 
 class Books extends Base
@@ -78,4 +79,53 @@ class Books extends Base
 
         return $this->view->fetch();
     }
+
+    public function backBook(Request $request)
+    {
+        $book_name = $request->param('name');
+
+        $borrow = new Borrow_list();
+        $info = new InfoModel();
+        $user = new UserModel();
+
+        //将该本书的borrow字段改为null
+        $infoData = ['borrow' => ""];
+        $infoCondition = ['name' => $book_name];
+        $infoResult = $info->update($infoData, $infoCondition);
+
+        //将已借书本数量减一
+        $id = Session::get('user_id');
+        $userResult = $user->where(array('id' => $id))->setDec('borrow_num', 1);
+
+        //在借书表中将关于此书的信息删除
+        $borrowResult = $borrow->where(array('name' => $book_name))->delete();
+
+
+        if ($infoResult == true) {
+            if ($borrowResult == true) {
+                if ($userResult == true) {
+                    $message = '归还成功';
+                    $status = '1';
+                    return ['message' => $message, 'status' => $status];
+                } else {
+                    $message = '个人信息修改错误';
+                    $status = '0';
+                    return ['message' => $message, 'status' => $status];
+                }
+            }else{
+                $message = '借书信息修改错误';
+                $status = '0';
+                return ['message' => $message, 'status' => $status];
+            }
+        } else {
+            $message = '图书信息修改错误';
+            $status = '0';
+            return ['message' => $message, 'status' => $status];
+        }
+
+        $message = 'null';
+        $status = '0';
+        return ['message' => $message, 'status' => $status];
+    }
+
 }
