@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图书馆管理系统</title>
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__STATIC__/static/books/css/styles.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <style type="text/css">
+        td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="JavaScript:void(0)">
+                <b>图书馆管理系统</b>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="index">主页</a>
+                </li>
+                <li class="active">
+                    <a href="books">图书管理</a>
+                </li>
+                <li>
+                    <a href="#">会员管理</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="logout"><span class="glyphicon glyphicon-log-out"></span>注销</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <!--搜索框-->
+    <form action="{:url('search')}" method="post">
+        <div style="width:450px;" class="center-block">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select name="type" class="form-control">
+                        <option value="name">书名查询</option>
+                        <option value="num">书号查询</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="input" class="form-control" placeholder="输入搜索内容" name="keyword" style="width:200px;" value=""/>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" id="research" class="btn btn-primary" title="搜索"><i class="Hui-iconfont">&#xe665;</i></button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <!--查询到的信息页表头-->
+    <table class="table table-bordered table-hover text-center" style="margin-top:30px;">
+        <thead>
+        <tr class="active">
+            <th class="text-center info">图书号</th>
+            <th class="text-center danger">图书名</th>
+            <th class="text-center warning">作者</th>
+            <th class="text-center success" style="width: 90px;">状态</th>
+            <th class="text-center primary">操作</th>
+        </tr>
+        </thead>
+
+        <!--查询到的具体信息-->
+        <tbody style="background-color: white">
+        {volist name='booksList' id='vo'}
+        <tr>
+            <td class="info">{$vo.id}</td>
+            <td>
+                <a class="danger queryA" href="javascript:void(0)" onclick="query('{$vo.name}')" title="查看详情">{$vo.name}</a>
+            </td>
+            <td class="warning">{$vo.author}</td>
+            {if condition="$vo.borrow eq ''"}
+            <td class="success">在馆</td>
+            {else /}
+            <td class="danger">已借出</td>
+            {/if}
+            <td class="primary">
+                <button type="button" class="btn btn-warning btn-xs" title="修改">
+                    <a class="glyphicon glyphicon-pencil"></a>
+                </button>
+                <button type="button" class="btn btn-danger btn-xs"  title="删除">
+                    <a class="glyphicon glyphicon-remove"></a>
+                </button>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+
+    <!--点击名字跳转到详情页-->
+    <!-- 弹出模态窗口-->
+    <div class="modal fade" id="details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        书本详情
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <!--TODO-->
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">图书名：</div>
+                            <input type="text" class="form-control" readonly id="name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">作者：</div>
+                            <input type="text" class="form-control" readonly id="author">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">出版社：</div>
+                            <input type="text" class="form-control" readonly id="press">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">出版时间：</div>
+                            <input type="" class="form-control" readonly id="press_time">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">价格：</div>
+                            <input type="text" class="form-control" readonly id="price">
+                            <div class="input-group-addon">元</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">ISBN：</div>
+                            <input type="text" class="form-control" readonly id="ISBN">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-left" style="width: 100%">作品简介：</label>
+                        <textarea class="form-control" style="height: 150px;resize:none;" readonly id="desc"></textarea>
+                    </div>
+
+                </div><!--modal-body-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+
+
+</div>
+
+
+
+<script>
+    function query(name) {
+        $.ajax({
+            url:"../Books/details",
+            async: true,
+            type: "get",
+            data: {"name":name},
+            dataType: "json",
+            //成功后开启模态框
+            success: function (data) {
+
+                $("#name").val(name);
+                $("#author").val(data.author);
+                $("#press").val(data.press);
+                $("#press_time").val(data.press_time);
+                $("#price").val(data.price);
+                $("#ISBN").val(data.ISBN);
+                $("#desc").val(data.desc);
+
+                $('#details').modal('show');
+            },
+            error:function () {
+                alert("请求失败");
+            },
+
+        });
+    };
+
+    function add() {
+        alert('add');
+    }
+
+
+
+</script>
+
+</body>
+</html>
