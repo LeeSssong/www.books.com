@@ -96,6 +96,7 @@
             <th class="text-center danger">图书名</th>
             <th class="text-center warning">作者</th>
             <th class="text-center success" style="width: 90px;">状态</th>
+            <th class="text-center primary">操作</th>
         </tr>
         </thead>
 
@@ -110,8 +111,14 @@
             <td class="warning">{$vo.author}</td>
             {if condition="$vo.borrow eq ''"}
             <td class="success">在馆</td>
+            <td class="primary">
+                <a class="btn-primary btn" href="javascrip:void(0)" onclick="borrow('{$vo.name}')">借阅</a>
+            </td>
             {else /}
             <td class="danger">已借出</td>
+            <td class="primary">
+                <a class="btn-primary btn" href="javascrip:void(0)" onclick="borrow('{$vo.name}')" disabled="true">借阅</a>
+            </td>
             {/if}
         </tr>
         {/volist}
@@ -234,6 +241,34 @@ function query(name) {
         },
 
     });
+};
+function borrow(name) {
+    if (confirm('确认要借阅此本书吗？')){
+        alert('正在处理');
+        $.ajax({
+            url:"borrowBook",
+            async: true,
+            type: "post",
+            data: {"name":name},
+            dataType:"json",
+            success: function (data) {
+              if (data.status == 1)
+              {
+                alert(data.message);
+                window.location.href="books";
+              }
+              else
+              {
+                  alert(data.message);
+              }
+            },
+            error: function (data) {
+                alert('传输失败');
+            },
+        })
+    }else{
+        alert('点击了取消')
+    }
 }
 
 

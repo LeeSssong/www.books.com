@@ -5,6 +5,7 @@ namespace app\index\controller;
 use app\index\model\Borrow_list;
 use app\index\model\Info as InfoModel;
 use app\index\model\User as UserModel;
+use app\index\model\Borrow_list as BorrowModel;
 use think\Request;
 use think\Session;
 
@@ -50,7 +51,7 @@ class Books extends Base
         return $this->view->fetch();
     }
 
-    public  function search(Request $request)
+    public function search(Request $request)
     {
         $data = $request->post();
         $book_name = '追风筝的人';
@@ -128,4 +129,55 @@ class Books extends Base
         return ['message' => $message, 'status' => $status];
     }
 
+    public function borrowBook(Request $request)
+    {
+        $status = 1;
+        $message = '借阅成功';
+        $book_name = $request->param('name');
+        $user = new UserModel();
+        $info = new InfoModel();
+        $borrow = new BorrowModel();
+
+        //将用户的借书数量加一
+        $id = Session::get('user_id');
+        $userResult = $user->where(array('id' => $id))->setInc('borrow_num', 1);
+
+        //将该本书的borrow字段改为该用户id
+        $infoData = ['borrow' => $id];
+        $infoCondition = ['name' => $book_name];
+        $infoResult = $info->update($infoData, $infoCondition);
+
+        //添加条目到borrow表
+        $info = $info->get(['name'=>$book_name]);
+        $info_id = $info->id;
+        $borrow_date = date('Y-m-d',time());
+        $back_date = date("Y-m-d",strtotime('+2 month'));
+        $data = ['info_id'=>$info_id,'user_id'=>$id,'borrow_date'=>$borrow_date,'back_date'=>$back_date,'name'=>$book_name];
+        $Info = new BorrowModel();
+        $borrowResult = $Info->insert($data);
+
+        if ($infoResult == true) {
+            if ($borrowResult == true) {
+                if ($userResult == true) {
+                    $message = '借阅成功';
+                    $status = '1';
+                    return ['message' => $message, 'status' => $status];
+                } else {
+                    $message = '个人信息修改错误';
+                    $status = '0';
+                    return ['message' => $message, 'status' => $status];
+                }
+            }else{
+                $message = '借书信息修改错误';
+                $status = '0';
+                return ['message' => $message, 'status' => $status];
+            }
+        } else {
+            $message = '图书信息修改错误';
+            $status = '0';
+            return ['message' => $message, 'status' => $status];
+        }
+
+        return ['status'=>$status, 'message'=>$message];
+    }
 }
