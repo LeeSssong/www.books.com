@@ -142,6 +142,12 @@ class User extends Base
         $id = Session::get('user_id');
 
         $borrow = BorrowModel::get(['user_id' => $id]);
+
+        if (Session::get('user_info.role') == 1)
+        {
+            $this->redirect('Admin/index');
+        }
+
         $books = new InfoModel();
         $books_num = $books->count();
 
