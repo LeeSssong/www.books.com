@@ -16,7 +16,7 @@ class Books extends Base
     public function books(Request $request)
     {
         //通过分页显示数据
-        $bookslist = InfoModel::paginate(12);
+        $bookslist = InfoModel::paginate(10);
         $count = InfoModel::count();
         //TODO:获取记录数量
         $this->view->assign('count',$count);
@@ -54,28 +54,18 @@ class Books extends Base
     public function search(Request $request)
     {
         $data = $request->post();
-        $book_name = '追风筝的人';
-        $book = InfoModel::get(['name' => $book_name]);
-//        $book = InfoModel::get(['id' => $id]);
-
+        $keyword = $data['keyword'];
+        $where = array();
+        $book = '';
         if (!empty($data['type'])) {
             if ($data['type'] == 'name') {
-                $book = InfoModel::get(['name'=>$data['keyword']]);
+                $where['name'] = array('like','%'.$keyword.'%');
+                $book = (new \app\index\model\Info)->where($where)->select();
+                $this->view->assign('booksList',$book);
             } else if ($data['type'] == 'num') {
-                $book = InfoModel::get(['id'=>$data['keyword']]);
+                $book = InfoModel::select(['id' => $keyword]);
+                $this->view->assign('booksList',$book);
             }
-        }
-//        $this->view->assign('booksList',$book);
-        if (null === $book) {
-            $this->view->assign('id',1);
-            $this->view->assign('name',2);
-            $this->view->assign('author',3);
-            $this->view->assign('user_id',4);
-        } else {
-            $this->view->assign('id',$book->id);
-            $this->view->assign('name',$book->name);
-            $this->view->assign('author',$book->author);
-            $this->view->assign('borrow',$book->borrow);
         }
 
         return $this->view->fetch();
