@@ -162,6 +162,7 @@ class User extends Base
     //用户详情页
     public function user_details()
     {
+        $this->isLogin();
         $this->view->assign('name',Session::get('user_info.name'));
         $this->view->assign('id',Session::get('user_info.id'));
         $this->view->assign('login_time',UserModel::getLoginTimeAttr(Session::get('user_info.login_time')));

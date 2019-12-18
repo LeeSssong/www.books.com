@@ -15,6 +15,7 @@ class Books extends Base
     //图书查询页面
     public function books(Request $request)
     {
+        $this->isLogin();
         //通过分页显示数据
         $bookslist = InfoModel::paginate(10);
         $count = InfoModel::count();
@@ -28,6 +29,7 @@ class Books extends Base
     //图书详情页
     public function details(Request $request)
     {
+        $this->isLogin();
         $book_name = $request->param('name');
         $message = '';
         //获取书本名字对应的数据，并返回对应模型
@@ -48,11 +50,13 @@ class Books extends Base
 
     public function borrow()
     {
+        $this->isLogin();
         return $this->view->fetch();
     }
 
     public function search(Request $request)
     {
+        $this->isLogin();
         $data = $request->post();
         $keyword = $data['keyword'];
         $where = array();

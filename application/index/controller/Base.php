@@ -13,6 +13,7 @@ class Base extends Controller
         parent::_initialize();
 
         define('USER_ID', Session::has('user_id') ? Session::get('user_id'):null);
+
     }
 
     //判断用户是否登陆,放在系统后台入口前面: index/index

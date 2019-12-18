@@ -96,6 +96,7 @@
             <th class="text-center danger">图书名</th>
             <th class="text-center warning">作者</th>
             <th class="text-center success" style="width: 90px;">状态</th>
+            <th class="text-center primary">操作</th>
         </tr>
         </thead>
 
@@ -110,8 +111,14 @@
             <td class="warning">{$vo.author}</td>
             {if condition="$vo.borrow eq ''"}
             <td class="success">在馆</td>
+            <td class="primary">
+                <a class="btn-primary btn" href="javascrip:void(0)" onclick="borrow('{$vo.name}')">借阅</a>
+            </td>
             {else /}
             <td class="danger">已借出</td>
+            <td class="primary">
+                <a class="btn-danger btn" href="javascrip:void(0)" disabled="true">借阅</a>
+            </td>
             {/if}
         </tr>
         {/volist}
@@ -198,32 +205,61 @@
 
 
 <script>
-    function query(name) {
+function query(name) {
+    $.ajax({
+        url:"details",
+        async: true,
+        type: "get",
+        data: {"name":name},
+        dataType: "json",
+        //成功后开启模态框
+        success: function (data) {
+
+            $("#name").val(name);
+            $("#author").val(data.author);
+            $("#press").val(data.press);
+            $("#press_time").val(data.press_time);
+            $("#price").val(data.price);
+            $("#ISBN").val(data.ISBN);
+            $("#desc").val(data.desc);
+
+            $('#details').modal('show');
+        },
+        error:function () {
+            alert("请求失败");
+        },
+
+    });
+};
+function borrow(name) {
+    if (confirm('确认要借阅此本书吗？')){
+        alert('正在处理');
         $.ajax({
-            url:"details",
+            url:"borrowBook",
             async: true,
-            type: "get",
+            type: "post",
             data: {"name":name},
-            dataType: "json",
-            //成功后开启模态框
+            dataType:"json",
             success: function (data) {
-
-                $("#name").val(name);
-                $("#author").val(data.author);
-                $("#press").val(data.press);
-                $("#press_time").val(data.press_time);
-                $("#price").val(data.price);
-                $("#ISBN").val(data.ISBN);
-                $("#desc").val(data.desc);
-
-                $('#details').modal('show');
+                if (data.status == 1)
+                {
+                    alert(data.message);
+                    window.location.href="books";
+                }
+                else
+                {
+                    alert(data.message);
+                }
             },
-            error:function () {
-                alert("请求失败");
+            error: function (data) {
+                alert('传输失败');
             },
-
-        });
+        })
+    }else{
+        alert('点击了取消')
     }
+}
+
 
 
 </script>
