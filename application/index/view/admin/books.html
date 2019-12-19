@@ -117,7 +117,7 @@
                     <a class="glyphicon glyphicon-pencil" href="javascrip:void(0)" onclick="edit('{$vo.name}')"></a>
                 </button>
                 <button type="button" class="btn btn-danger btn-xs"  title="删除">
-                    <a class="glyphicon glyphicon-remove"></a>
+                    <a class="glyphicon glyphicon-remove" href="javascrip:void(0)" onclick="deleteBook('{$vo.name}')"></a>
                 </button>
             </td>
         </tr>
@@ -133,11 +133,6 @@
             <div class="col-md-4">{$booksList->render()}</div></div>
         <div class="col-md-4"></div>
     </div>
-
-
-
-
-
 
 
     <!-- 弹出模态窗口-->
@@ -217,6 +212,82 @@
         </div><!-- /.modal -->
     </div>
 
+<!--    增加书本模态框-->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" id="addForm">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel2">
+                            书本详情
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <!--TODO-->
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">图书名：</div>
+                                <input type="text" class="form-control" name="name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">作者：</div>
+                                <input type="text" class="form-control" name="author">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">出版社：</div>
+                                <input type="text" class="form-control" name="press">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">出版时间：</div>
+                                <input type="" class="form-control" name="press_time">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">价格：</div>
+                                <input type="text" class="form-control" name="price">
+                                <div class="input-group-addon">元</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">ISBN：</div>
+                                <input type="text" class="form-control" name="ISBN">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-left" style="width: 100%">作品简介：</label>
+                            <textarea class="form-control" style="height: 150px;resize:none;" name="desc"></textarea>
+                        </div>
+
+                    </div><!--modal-body-->
+                    <div class="modal-footer">
+                        <button type="button" id="addSubmit" class="btn btn-primary disabled" data-dismiss="modal">提交</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+
+                </form>
+            </div><!-- /.modal-content -->
+
+        </div><!-- /.modal -->
+    </div>
+
 </div>
 
 
@@ -225,7 +296,8 @@
     $(function () {
         //如果信息没有修改则确定按钮不能按下
         $("form").children().change(function () {
-            $("#editSubmit").removeClass('disabled')
+            $("#editSubmit").removeClass('disabled');
+            $("#addSubmit").removeClass('disabled');
         });
 
         $("#editSubmit").click(function () {
@@ -250,6 +322,31 @@
                 }
             })
         });
+
+        $("#addSubmit").click(function () {
+            alert('正在添加');
+            $.ajax({
+                url: "bookAdd",
+                type: "post",
+                data: $("#addForm").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        alert(data.message);
+                        window.location.href="{:url('books')}";
+                    }else{
+                        alert(data.message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+
+            })
+        })
 
 
     });
@@ -281,9 +378,34 @@
         });
     };
 
-    function add() {
-        alert('add');
+    function deleteBook(name) {
+        if (confirm('确定要删除本书吗？')){
+            alert('正在处理');
+            $.ajax({
+                url: "deleteBook",
+                type: "post",
+                data: {"bookName":name},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1) {
+                        alert(data.message);
+                        window.location.href="books";
+                    } else if (data.status == 0) {
+                        alert(data.message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                },
+            })
+        }else{
+            alert('选择了取消');
+        }
+
     };
+
 </script>
 
 </body>

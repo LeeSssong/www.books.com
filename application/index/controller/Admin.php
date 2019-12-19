@@ -113,4 +113,35 @@ class Admin extends User
 
     }
 
+    //删除图书
+    public function bookDelete(Request $request)
+    {
+        $message = '删除成功';
+        $status = 0;
+        $bookName = $request->param('bookName');
+        return ['message'=>$message, 'status'=>$status];
+    }
+
+    //增加图书
+    public function bookAdd(Request $request)
+    {
+        $data = $request->param();
+        $status = 0;
+        $message = '增加失败';
+
+        $book = new InfoModel($_POST);
+        $book->allowField(true)->save();
+
+        if ($book === null) {
+            $status = 0;
+            $message = '添加失败';
+            $swapMessage = $message;
+        } else {
+            $status = 1;
+            $message = '添加成功';
+            $swapMessage = $message;
+        }
+        return ['status'=>$status, 'message'=>$swapMessage];
+
+    }
 }
