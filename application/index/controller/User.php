@@ -215,7 +215,7 @@ class User extends Base
         //获取数据
         $param = $request -> param();
 
-        //去掉表单中为空的数据，name为字段名,value为字段值
+        //去掉表单中为空的数据，key为字段名,value为字段值
         foreach ($param as $key => $value) {
             if (!empty($value)){
                 $data[$key] = $value;

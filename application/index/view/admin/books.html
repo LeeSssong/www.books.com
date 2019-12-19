@@ -210,6 +210,7 @@
                         <button type="button" id="editSubmit" class="btn btn-primary disabled" data-dismiss="modal">提交</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
+                    <input type="hidden" id="book_id" name="book_id">
                 </form>
             </div><!-- /.modal-content -->
 
@@ -262,6 +263,7 @@
             //成功后开启模态框
             success: function (data) {
 
+                $("#book_id").val(data.id);
                 $("#name").val(name);
                 $("#author").val(data.author);
                 $("#press").val(data.press);

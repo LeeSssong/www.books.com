@@ -6,6 +6,7 @@ use app\index\controller\Base;
 use app\index\model\Borrow_list as BorrowModel;
 use app\index\model\Info as InfoModel;
 use app\index\model\User as UserModel;
+use think\Db;
 use think\Request;
 use think\Session;
 use app\index\controller\Books;
@@ -83,23 +84,30 @@ class Admin extends User
         $param = $request -> param();
 
         $book = InfoModel::get(['name' => $param['name']]);
+        $book_id = $param['book_id'];
 
-        $book->name = $param['name'];
-        $book->author = $param['author'];
-        $book->press = $param['press'];
-        $book->press_time = $param['press_time'];
-        $book->price = $param['price'];
-        $book->ISBN = $param['ISBN'];
-        $book->desc = $param['desc'];
+        //成功
+        Db::table('info')
+            ->where('id',$book_id)
+            ->data(
+                [
+                    'name' => $param['name'],
+                    'author' => $param['author'],
+                    'press_time' => $param['press_time'],
+                    'price' => $param['price'],
+                    'ISBN' => $param['ISBN'],
+                    'desc' => $param['desc'],
+                ])
+            ->update();
 
-        if ($book->save())
-        {
-            $message = '修改成功';
-            $status = 1;
-        }
+        Db::table('borrow_list')
+            ->where('info_id',$book_id)
+            ->data(['name' => $param['name']])
+            ->update();
 
-        //$borrow = BorrowModel::get(['name' => $param['name']]);
-        BorrowModel::update(['name' => $param['name']]);
+        $status = 1;
+        $message = '修改成功';
+
 
         return ['status'=>$status, 'message'=>$message];
 

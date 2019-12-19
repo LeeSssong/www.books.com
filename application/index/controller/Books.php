@@ -42,10 +42,11 @@ class Books extends Base
         $price = $result->price;
         $ISBN = $result->ISBN;
         $desc = $result->desc;
+        $id = $result->id;
 
         return ['name'=>$name,'author'=>$author,'author'=>$author,
             'press'=>$press,'press_time'=>$press_time,'price'=>$price,
-            'ISBN'=>$ISBN,'desc'=>$desc];
+            'ISBN'=>$ISBN,'desc'=>$desc,'id'=>$id];
     }
 
     public function borrow()

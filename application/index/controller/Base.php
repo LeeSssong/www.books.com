@@ -11,7 +11,9 @@ class Base extends Controller
     protected function _initialize()
     {
         parent::_initialize();
-
+        define('APP_DEBUG',TRUE); // 开启调试模式
+        define('DB_FIELD_CACHE',false);
+        define('HTML_CACHE_ON',false);//
         define('USER_ID', Session::has('user_id') ? Session::get('user_id'):null);
 
     }
