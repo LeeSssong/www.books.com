@@ -117,8 +117,20 @@ class Admin extends User
     public function bookDelete(Request $request)
     {
         $message = '删除成功';
-        $status = 0;
+        $status = 1;
         $bookName = $request->param('bookName');
+
+        //在info表中删除本书
+        $book = new InfoModel();
+        $result = $book->where(['name' => $bookName])->delete();
+        if ($result){
+            $message = '删除成功';
+            $status = 1;
+        }else{
+            $message = '删除失败';
+            $status = 0;
+        }
+
         return ['message'=>$message, 'status'=>$status];
     }
 
@@ -142,6 +154,5 @@ class Admin extends User
             $swapMessage = $message;
         }
         return ['status'=>$status, 'message'=>$swapMessage];
-
     }
 }

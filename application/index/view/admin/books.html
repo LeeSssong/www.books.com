@@ -116,9 +116,15 @@
                 <button type="button" class="btn btn-warning btn-xs " title="修改">
                     <a class="glyphicon glyphicon-pencil" href="javascrip:void(0)" onclick="edit('{$vo.name}')"></a>
                 </button>
-                <button type="button" class="btn btn-danger btn-xs"  title="删除">
+                {if condition="$vo.borrow eq ''"}
+                <button type="button" class="btn btn-danger btn-xs"  title="下架">
                     <a class="glyphicon glyphicon-remove" href="javascrip:void(0)" onclick="deleteBook('{$vo.name}')"></a>
                 </button>
+                {else /}
+                <button type="button" class="btn btn-danger btn-xs"  title="下架">
+                    <a class="glyphicon glyphicon-remove" href="javascrip:void(0)" onclick="alert('该书已被借出')"></a>
+                </button>
+                {/if}
             </td>
         </tr>
         {/volist}
@@ -382,7 +388,7 @@
         if (confirm('确定要删除本书吗？')){
             alert('正在处理');
             $.ajax({
-                url: "deleteBook",
+                url: "bookDelete",
                 type: "post",
                 data: {"bookName":name},
                 dataType: "json",
