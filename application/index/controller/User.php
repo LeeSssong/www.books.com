@@ -254,8 +254,9 @@ class User extends Base
 //        $condition = ['id' => Session::get('user_id')];
 //        $result = UserModel::update($data,$condition);
 
+        $user_name = $request->param('name');
         $user = new UserModel();
-        $result = $user->where('id',Session::get('user_id'))->update(['isDelete' => '0']);
+        $result = $user->where('name',$user_name)->update(['isDelete' => '0']);
         if ($result == true) {
             return ['status' => 1, 'message' => "已删除，点击[确定]退出"];
         } else if ($result == false) {

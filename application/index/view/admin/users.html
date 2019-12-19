@@ -117,24 +117,24 @@
             <td class="danger">挂失</td>
             {/if}
             <td class="primary">
-                {if condition="$vo.isDelete eq '0'"}
+                {if condition="$vo.isDelete eq '1'"}
                     {if condition="$vo.role eq '0'"}
-                            <button type="button" class="btn btn-danger btn-xs " title="注销">
-                                <a class="glyphicon glyphicon-minus-sign" href="javascrip:void(0)" data-toggle="modal" data-target="#deleteUser"></a>
-                            </button>
-                            {if condition="$vo.status eq '已停用'"}
-                            <button type="button" class="btn btn-info btn-xs"  title="启用">
-                                <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="upUser('{$vo.name}')" ></a>
-                            </button>
-                            {else /}
-                            <button type="button" class="btn btn-warning btn-xs"  title="启用">
-                                <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="alert('该用户已启用')"></a>
-                            </button>
-                            {/if}
+                        <button type="button" class="btn btn-danger btn-xs " title="注销">
+                            <a class="glyphicon glyphicon-minus-sign" href="javascrip:void(0)" onclick="delUser('{$vo.name}')"></a>
+                        </button>
+                        {if condition="$vo.status eq '已停用'"}
+                        <button type="button" class="btn btn-info btn-xs"  title="启用">
+                            <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="upUser('{$vo.name}')" ></a>
+                        </button>
+                        {else /}
+                        <button type="button" class="btn btn-warning btn-xs"  title="启用">
+                            <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="alert('该用户已启用')"></a>
+                        </button>
+                        {/if}
                     {else /}
-                            <button type="button" class="btn btn-warning btn-xs">
-                                <a class="glyphicon glyphicon-user" href="javascrip:void(0)">管理员</a>
-                            </button>
+                        <button type="button" class="btn btn-warning btn-xs">
+                            <a class="glyphicon glyphicon-user" href="javascrip:void(0)">管理员</a>
+                        </button>
                     {/if}
                 {else /}
                 <button type="button" class="btn btn-danger btn-xs">
@@ -158,30 +158,6 @@
 
 
     <!-- 弹出模态窗口-->
-<!--    删除模态框-->
-    <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="margin-top: 150px">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel3">
-                        删除
-                    </h4>
-                </div>
-                <div class="modal-body" style="color: red">
-                    是否要删除该账户
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="delSubmit" class="btn btn-danger" data-dismiss="modal">
-                        确定
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        关闭
-                    </button>
-                </div>
-            </div>
-        </div><!--modal-content-->
-    </div><!--modal-->
-
 <!--    添加用户模态框-->
     <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="margin-top: 150px">
@@ -234,30 +210,35 @@
 
 
 <script>
+    function delUser(name) {
+        if (confirm('是否注销该用户？')){
+            $.ajax({
+                type: "post",
+                url: "../User/delUser",
+                data: {"name":name},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1) {
+                        alert(data.message);
+                        window.location.href="users";
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+            })
+        }else {
+            alert('选择了取消');
+        }
+    };
 $(function () {
 
     $("form").children().change(function () {
         $("#addSubmit").removeClass('disabled');
-    });
-    $("#delSubmit").click(function () {
-        $.ajax({
-            type: "post",
-            url: "../User/delUser",
-            data: {},
-            dataType: "json",
-            success: function (data) {
-                if (data.status == 1) {
-                    alert(data.message);
-                    window.location.href="users";
-                } else {
-                    alert(data.message);
-                }
-            },
-            error: function (data) {
-                alert('请求失败');
-                alert(data.message);
-            }
-        });
     });
 
     $("#name").blur(function () {

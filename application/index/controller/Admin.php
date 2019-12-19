@@ -204,4 +204,6 @@ class Admin extends User
         return ['message' => $message, 'status'=>$status];
     }
 
+    //删除用户
+
 }
