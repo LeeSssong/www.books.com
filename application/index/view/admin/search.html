@@ -204,16 +204,74 @@
 
 
 <script>
-    function query(name) {
+    $(function () {
+        //如果信息没有修改则确定按钮不能按下
+        $("form").children().change(function () {
+            $("#editSubmit").removeClass('disabled');
+            $("#addSubmit").removeClass('disabled');
+        });
+
+        $("#editSubmit").click(function () {
+            $.ajax({
+                async: false,
+                type: 'post',
+                url: "{:url('bookEdit')}",
+                data: $("#bookForm").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1){
+                        alert(data.message);
+                        window.location.href="{:url('books')}";
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error:function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+            })
+        });
+
+        $("#addSubmit").click(function () {
+            alert('正在添加');
+            $.ajax({
+                url: "bookAdd",
+                type: "post",
+                data: $("#addForm").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        alert(data.message);
+                        window.location.href="{:url('books')}";
+                    }else{
+                        alert(data.message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+
+            })
+        })
+
+
+    });
+    function edit(name) {
         $.ajax({
             url:"../Books/details",
-            async: true,
+            async: false,
             type: "get",
             data: {"name":name},
             dataType: "json",
             //成功后开启模态框
             success: function (data) {
 
+                $("#book_id").val(data.id);
                 $("#name").val(name);
                 $("#author").val(data.author);
                 $("#press").val(data.press);
@@ -231,10 +289,33 @@
         });
     };
 
-    function add() {
-        alert('add');
-    }
+    function deleteBook(name) {
+        if (confirm('确定要删除本书吗？')){
+            alert('正在处理');
+            $.ajax({
+                url: "bookDelete",
+                type: "post",
+                data: {"bookName":name},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1) {
+                        alert(data.message);
+                        window.location.href="books";
+                    } else if (data.status == 0) {
+                        alert(data.message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                },
+            })
+        }else{
+            alert('选择了取消');
+        }
 
+    };
 
 
 </script>

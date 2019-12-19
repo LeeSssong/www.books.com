@@ -71,7 +71,7 @@ class Admin extends User
             }
         }
 
-        return $this->view->fetch();
+        return $this->view->fetch('books');
     }
 
     //修改图书
@@ -155,4 +155,53 @@ class Admin extends User
         }
         return ['status'=>$status, 'message'=>$swapMessage];
     }
+
+    //显示用户
+    public function users()
+    {
+        $userslist = UserModel::paginate(10);
+
+        $count = UserModel::count();
+
+        $this->view->assign('count',$count);
+        $this->view->assign('usersList',$userslist);
+
+        return $this->view->fetch('users');
+    }
+
+    //渲染结果
+    public function usersearch(Request $request)
+    {
+        $data = $request->post();
+        $keyword = $data['keyword'];
+        $where = array();
+        $user = '';
+        if (!empty($data['type'])) {
+            if ($data['type'] == 'name') {
+                $where['name'] = array('like','%'.$keyword.'%');
+                $user = (new \app\index\model\User)->where($where)->select();
+                $this->view->assign('usersList',$user);
+            } else if ($data['type'] == 'num') {
+                $user = UserModel::select(['id' => $keyword]);
+                $this->view->assign('usersList',$user);
+            }
+        }
+
+        return $this->view->fetch();
+    }
+
+    //启用用户
+    public function upUser(Request $request)
+    {
+        $user_name = $request->param('name');
+        Db::table('user')
+            ->where(['name' => $user_name])
+            ->data(['status' => 1])
+            ->update();
+        $message = '启用成功';
+        $status = 1;
+
+        return ['message' => $message, 'status'=>$status];
+    }
+
 }

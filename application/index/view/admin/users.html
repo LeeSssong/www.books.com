@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图书馆管理系统</title>
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__STATIC__/static/books/css/styles.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <!-- Website Font style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <style type="text/css">
+        td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="JavaScript:void(0)">
+                <b>图书馆管理系统</b>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="index">主页</a>
+                </li>
+                <li>
+                    <a href="books">图书管理</a>
+                </li>
+                <li class="active">
+                    <a href="users">会员管理</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="logout"><span class="glyphicon glyphicon-log-out"></span>注销</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <!--搜索框-->
+    <form action="{:url('usersearch')}" method="post">
+        <div style="width:450px;" class="center-block">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select name="type" class="form-control">
+                        <option value="num">借书号查询</option>
+                        <option value="name">用户名查询</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="input" class="form-control" placeholder="输入搜索内容" name="keyword" style="width:200px;" value=""/>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" id="research" class="btn btn-primary" title="搜索"><i class="Hui-iconfont">&#xe665;</i></button>
+                </div>
+                <div class="form-group">
+                    <a type="button" class="btn btn-primary" title="添加" data-toggle="modal" data-target="#add"><i class="Hui-iconfont">&#xe600;</i></a>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <!--查询到的信息页表头-->
+    <table class="table table-bordered table-hover text-center" style="margin-top:30px;">
+        <thead>
+        <tr class="active">
+            <th class="text-center info">借书号</th>
+            <th class="text-center danger">用户名</th>
+            <th class="text-center warning">借阅数量</th>
+            <th class="text-center info">上次登陆时间</th>
+            <th class="text-center success">状态</th>
+            <th class="text-center primary">操作</th>
+        </tr>
+        </thead>
+
+        <!--查询到的具体信息-->
+        <tbody style="background-color: white">
+        {volist name='usersList' id='vo'}
+        <tr>
+            <td class="info">{$vo.id}</td>
+            <td class="danger">{$vo.name}</td>
+            <td class="warning">{$vo.borrow_num}</td>
+            <td class="info">{$vo.login_time}</td>
+            {if condition="$vo.status eq '已启用'"}
+            <td class="success">启用</td>
+            {else /}
+            <td class="danger">挂失</td>
+            {/if}
+            <td class="primary">
+                {if condition="$vo.isDelete eq '0'"}
+                    {if condition="$vo.role eq '0'"}
+                            <button type="button" class="btn btn-danger btn-xs " title="注销">
+                                <a class="glyphicon glyphicon-minus-sign" href="javascrip:void(0)" data-toggle="modal" data-target="#deleteUser"></a>
+                            </button>
+                            {if condition="$vo.status eq '已停用'"}
+                            <button type="button" class="btn btn-info btn-xs"  title="启用">
+                                <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="upUser('{$vo.name}')" ></a>
+                            </button>
+                            {else /}
+                            <button type="button" class="btn btn-warning btn-xs"  title="启用">
+                                <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="alert('该用户已启用')"></a>
+                            </button>
+                            {/if}
+                    {else /}
+                            <button type="button" class="btn btn-warning btn-xs">
+                                <a class="glyphicon glyphicon-user" href="javascrip:void(0)">管理员</a>
+                            </button>
+                    {/if}
+                {else /}
+                <button type="button" class="btn btn-danger btn-xs">
+                    <a class="glyphicon glyphicon-minus-sign" href="javascrip:void(0)" >已注销</a>
+                </button>
+                {/if}
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+
+    <!--显示分页按钮,事先要将bootstrap导入css和js-->
+
+    <div class="container" id="pagination" style="margin-left: 200px">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">{$usersList->render()}</div></div>
+        <div class="col-md-4"></div>
+    </div>
+
+
+    <!-- 弹出模态窗口-->
+<!--    删除模态框-->
+    <div class="modal fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 150px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel3">
+                        删除
+                    </h4>
+                </div>
+                <div class="modal-body" style="color: red">
+                    是否要删除该账户
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="delSubmit" class="btn btn-danger" data-dismiss="modal">
+                        确定
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div><!--modal-content-->
+    </div><!--modal-->
+
+<!--    添加用户模态框-->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 150px">
+            <div class="modal-content">
+                <form method="post" id="addForm">
+                    <!--头部-->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel1">
+                            添加用户
+                        </h4>
+                    </div>
+                    <!--主要内容-->
+                    <div class="modal-body  center-block" style="width: 45%">
+
+                        <div class="form-group">
+                            <label for="name" class="cols-sm-2 control-label">用户名</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                    <input type="text" class="form-control" name="name" id="name"  placeholder="Enter Name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="cols-sm-2 control-label">密码</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                    <input type="password" class="form-control" name="password" id="password"  placeholder="Enter Password" autocomplete="off" value=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="addSubmit" class="btn btn-primary disabled">
+                            添加
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                    </div>
+                </form>
+            </div><!--modal-content-->
+        </div><!--modal-->
+    </div>
+</div>
+
+
+
+
+<script>
+$(function () {
+
+    $("form").children().change(function () {
+        $("#addSubmit").removeClass('disabled');
+    });
+    $("#delSubmit").click(function () {
+        $.ajax({
+            type: "post",
+            url: "../User/delUser",
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.message);
+                    window.location.href="users";
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function (data) {
+                alert('请求失败');
+                alert(data.message);
+            }
+        });
+    });
+
+    $("#name").blur(function () {
+        $.ajax({
+            type:'GET',
+            url: "../User/checkUserName",
+            data:{name:$(this).val()},
+            dataType: 'json',
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+            }
+        });
+    });
+    $("#addSubmit").click(function () {
+        alert('this');
+        $.ajax({
+            type: "POST",
+            url: "../User/addUser",
+            data: $("#addForm").serialize(),
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == 1) {
+                    alert(data.message);
+                    window.location.href="{:url('users')}";
+                } else {
+                    alert(data.message);
+                }
+            }
+        })
+    });
+});
+
+function upUser(name) {
+    if (confirm('你确定要启用该用户吗？')){
+        $.ajax({
+            url: "upUser",
+            type: "post",
+            data: {"name":name},
+            dataType: "json",
+            success: function (data) {
+                if(data.status == 1) {
+                    alert(data.message);
+                    window.location.href="{:url('users')}";
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        })
+    }else{
+        alert('点击了取消');
+    }
+}
+
+
+
+</script>
+
+</body>
+</html>

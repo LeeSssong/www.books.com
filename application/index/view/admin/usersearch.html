@@ -46,11 +46,11 @@
                 <li>
                     <a href="index">主页</a>
                 </li>
-                <li class="active">
+                <li>
                     <a href="books">图书管理</a>
                 </li>
-                <li>
-                    <a href="users.html">会员管理</a>
+                <li class="active">
+                    <a href="users">会员管理</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -64,13 +64,13 @@
 
 <div class="container-fluid">
     <!--搜索框-->
-    <form action="{:url('search')}" method="post">
+    <form action="{:url('usersearch')}" method="post">
         <div style="width:450px;" class="center-block">
             <div class="form-inline">
                 <div class="form-group">
                     <select name="type" class="form-control">
-                        <option value="name">书名查询</option>
-                        <option value="num">书号查询</option>
+                        <option value="num">借书号查询</option>
+                        <option value="name">用户名查询</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -92,9 +92,10 @@
     <table class="table table-bordered table-hover text-center" style="margin-top:30px;">
         <thead>
         <tr class="active">
-            <th class="text-center info">图书号</th>
-            <th class="text-center danger">图书名</th>
-            <th class="text-center warning">作者</th>
+            <th class="text-center info">借书号</th>
+            <th class="text-center danger">用户名</th>
+            <th class="text-center warning">借阅数量</th>
+            <th class="text-center info">上次登陆时间</th>
             <th class="text-center success" style="width: 90px;">状态</th>
             <th class="text-center primary">操作</th>
         </tr>
@@ -102,27 +103,28 @@
 
         <!--查询到的具体信息-->
         <tbody style="background-color: white">
-        {volist name='booksList' id='vo'}
+        {volist name='usersList' id='vo'}
         <tr>
             <td class="info">{$vo.id}</td>
             <td class="danger">{$vo.name}</td>
-            <td class="warning">{$vo.author}</td>
-            {if condition="$vo.borrow eq ''"}
-            <td class="success">在馆</td>
+            <td class="warning">{$vo.borrow_num}</td>
+            <td class="info">{$vo.login_time}</td>
+            {if condition="$vo.status eq '已启用'"}
+            <td class="success">启用</td>
             {else /}
-            <td class="danger">已借出</td>
+            <td class="danger">挂失</td>
             {/if}
             <td class="primary">
-                <button type="button" class="btn btn-warning btn-xs " title="修改">
-                    <a class="glyphicon glyphicon-pencil" href="javascrip:void(0)" onclick="edit('{$vo.name}')"></a>
+                <button type="button" class="btn btn-warning btn-xs " title="注销">
+                    <a class="glyphicon glyphicon-pencil" href="javascrip:void(0)" onclick=""></a>
                 </button>
-                {if condition="$vo.borrow eq ''"}
-                <button type="button" class="btn btn-danger btn-xs"  title="下架">
-                    <a class="glyphicon glyphicon-remove" href="javascrip:void(0)" onclick="deleteBook('{$vo.name}')"></a>
+                {if condition="$vo.status eq '已停用'"}
+                <button type="button" class="btn btn-info btn-xs"  title="启用">
+                    <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick=""></a>
                 </button>
                 {else /}
-                <button type="button" class="btn btn-danger btn-xs"  title="下架">
-                    <a class="glyphicon glyphicon-remove" href="javascrip:void(0)" onclick="alert('该书已被借出')"></a>
+                <button type="button" class="btn btn-danger btn-xs"  title="启用">
+                    <a class="glyphicon glyphicon-ok-sign" href="javascrip:void(0)" onclick="alert('该用户已启用')"></a>
                 </button>
                 {/if}
             </td>
@@ -130,16 +132,6 @@
         {/volist}
         </tbody>
     </table>
-
-    <!--显示分页按钮,事先要将bootstrap导入css和js-->
-
-    <div class="container" id="pagination" style="margin-left: 200px">
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">{$booksList->render()}</div></div>
-        <div class="col-md-4"></div>
-    </div>
-
 
     <!-- 弹出模态窗口-->
     <!--点击名字跳转到详情页-->
@@ -218,7 +210,7 @@
         </div><!-- /.modal -->
     </div>
 
-<!--    增加书本模态框-->
+    <!--    增加书本模态框-->
     <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -299,118 +291,9 @@
 
 
 <script>
-    $(function () {
-        //如果信息没有修改则确定按钮不能按下
-        $("form").children().change(function () {
-            $("#editSubmit").removeClass('disabled');
-            $("#addSubmit").removeClass('disabled');
-        });
-
-        $("#editSubmit").click(function () {
-            $.ajax({
-                async: false,
-                type: 'post',
-                url: "{:url('bookEdit')}",
-                data: $("#bookForm").serialize(),
-                dataType: "json",
-                success: function (data) {
-                    if (data.status == 1){
-                        alert(data.message);
-                        window.location.href="{:url('books')}";
-                    } else {
-                        alert(data.message);
-                    }
-                },
-                error:function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(XMLHttpRequest.status);
-                    alert(XMLHttpRequest.readyState);
-                    alert(textStatus);
-                }
-            })
-        });
-
-        $("#addSubmit").click(function () {
-            alert('正在添加');
-            $.ajax({
-                url: "bookAdd",
-                type: "post",
-                data: $("#addForm").serialize(),
-                dataType: "json",
-                success: function (data) {
-                    if (data.status == 1)
-                    {
-                        alert(data.message);
-                        window.location.href="{:url('books')}";
-                    }else{
-                        alert(data.message);
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(XMLHttpRequest.status);
-                    alert(XMLHttpRequest.readyState);
-                    alert(textStatus);
-                }
-
-            })
-        })
 
 
-    });
-    function edit(name) {
-        $.ajax({
-            url:"../Books/details",
-            async: false,
-            type: "get",
-            data: {"name":name},
-            dataType: "json",
-            //成功后开启模态框
-            success: function (data) {
 
-                $("#book_id").val(data.id);
-                $("#name").val(name);
-                $("#author").val(data.author);
-                $("#press").val(data.press);
-                $("#press_time").val(data.press_time);
-                $("#price").val(data.price);
-                $("#ISBN").val(data.ISBN);
-                $("#desc").val(data.desc);
-
-                $('#details').modal('show');
-            },
-            error:function () {
-                alert("请求失败");
-            },
-
-        });
-    };
-
-    function deleteBook(name) {
-        if (confirm('确定要删除本书吗？')){
-            alert('正在处理');
-            $.ajax({
-                url: "bookDelete",
-                type: "post",
-                data: {"bookName":name},
-                dataType: "json",
-                success: function (data) {
-                    if (data.status == 1) {
-                        alert(data.message);
-                        window.location.href="books";
-                    } else if (data.status == 0) {
-                        alert(data.message);
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(XMLHttpRequest.status);
-                    alert(XMLHttpRequest.readyState);
-                    alert(textStatus);
-                },
-            })
-        }else{
-            alert('选择了取消');
-        }
-
-    };
 
 </script>
 

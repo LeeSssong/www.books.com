@@ -39,14 +39,14 @@ class User extends Model
     protected $dateFormat = 'Y年m月d日';
 
     //数据表中角色字段:role返回值处理
-    public function getRoleAttr($value)
+    /*public function getRoleAttr($value)
     {
         $role = [
-            0=>'管理员',
-            1=> '超级管理员'
+            0=>'普通用户',
+            1=> '管理员'
         ];
         return $role[$value];
-    }
+    }*/
 
     //状态字段:status返回值处理
     public function getStatusAttr($value)
