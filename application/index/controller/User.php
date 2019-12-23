@@ -141,7 +141,14 @@ class User extends Base
         $this->isLogin();
         $id = Session::get('user_id');
 
-        $borrow = BorrowModel::get(['user_id' => $id]);
+
+        $borrow = new BorrowModel();
+        $where=array(
+            "user_id"=>$id
+        );
+
+        $borrow = $borrow->where($where)->select();
+
 
         if (Session::get('user_info.role') == 1)
         {
@@ -154,7 +161,7 @@ class User extends Base
         if( null === $borrow) {
             $borrow_num = 0;
         } else {
-            $borrow_num = $borrow->count();
+            $borrow_num= count($borrow);
         }
 
         $this->view->assign('count',$books_num);
@@ -186,11 +193,19 @@ class User extends Base
 
         //借阅详情
         $borrowList = BorrowModel::get(['user_id' => Session::get('user_id')]);
-        if ($borrowList == true){
-            $borrowList = $borrowList->paginate(5);
-            $count = $borrowList ->count();
-            $this->view->assign('count',$count);
-        }
+
+        $id = Session::get('user_id');
+        $borrow = new BorrowModel();
+        $where=array(
+            "user_id"=>$id
+        );
+        $borrowList = $borrow->where($where)->select();
+
+//        if ($borrowList == true){
+//            //$borrowList = $borrowList->paginate(5);
+//            //$count = $borrowList ->count();
+//            $this->view->assign('count',$count);
+//        }
 
 
         $this->view->assign('borrowList',$borrowList);
@@ -256,7 +271,11 @@ class User extends Base
 
         $user_name = $request->param('name');
         $user = new UserModel();
-        $result = $user->where('name',$user_name)->update(['isDelete' => '0']);
+        $where = array(
+            'isDelete' => 0,
+            'status' => 0
+        );
+        $result = $user->where('name',$user_name)->update($where);
         if ($result == true) {
             return ['status' => 1, 'message' => "已删除，点击[确定]退出"];
         } else if ($result == false) {
