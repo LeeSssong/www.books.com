@@ -71,7 +71,7 @@ class Admin extends User
             }
         }
 
-        return $this->view->fetch('books');
+        return $this->view->fetch('search');
     }
 
     //修改图书
@@ -203,7 +203,5 @@ class Admin extends User
 
         return ['message' => $message, 'status'=>$status];
     }
-
-    //删除用户
 
 }
